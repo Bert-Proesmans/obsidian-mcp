@@ -2,6 +2,8 @@ TODO.md
 CLAUDE.md
 AGENTS.md
 target/
+result
+result-*
 .DS_Store
 .cursor/
 tmp/

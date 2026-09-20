@@ -27,6 +27,13 @@ const DAEMON_DISABLED_BY_WATCH_REASON: &str =
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // reqwest is built with `rustls-no-provider` (see Cargo.toml) so that the
+    // `ring` crypto provider is used instead of `aws-lc-rs`. Without an
+    // explicit process-level default, any code path that builds a
+    // reqwest::Client (e.g. the obsidian-semanticd auto-download in
+    // `daemon::bootstrap`) panics on first use.
+    let _ = rustls::crypto::ring::default_provider().install_default();
+
     if let Some(code) = handle_cli_flags().await {
         std::process::exit(code);
     }
